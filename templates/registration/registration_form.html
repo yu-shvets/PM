@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block meta_title %}Register Form{% endblock meta_title %}
+
+{% block content %}
+  <div class="auth_form">
+    <form action="{% url "users:registration_register" %}" method="post">
+
+  {% csrf_token %}
+
+        {{ form.as_p }}
+
+  <button type="submit" class="btn btn-primary">Register</button>
+
+    </form>
+  </div>
+{% endblock content %}

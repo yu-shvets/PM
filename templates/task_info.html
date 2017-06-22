@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% block meta_title %}Task info{% endblock meta_title %}
+
+
+{% block content %}
+
+    <p>{{ object.name }}</p>
+    <p>Project manager: {{ object.project_manager.user }}</p>
+    <p>State: {{ object.state }}</p>
+    <p>Type: {{ object.type }}</p>
+    <p>Assigned collaborators: <br>{% for assigned in object.assigned.all %}{{ assigned.user }}<br>{% endfor %}</p>
+
+    {% if user.profile == object.project_manager %}
+        <a href="{% url 'edit' object.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'delete' object.pk %}" class="btn btn-primary">Delete</a>
+    {% endif %}
+
+    {% if user.profile in task.assigned.all %}
+        <p><a href="{% url 'update' object.pk %}" class="btn btn-primary">Change state</a></p>
+    {% endif %}
+
+{% endblock content %}

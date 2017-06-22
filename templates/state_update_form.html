@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+
+{% block meta_title %}Assign collaborators{% endblock meta_title %}
+
+
+{% block content %}
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update" />
+    </form>
+
+{% endblock content %}

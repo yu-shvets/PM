@@ -1,0 +1,24 @@
+<div>
+
+        {% if user.profile.role == 'PM' %}
+        <p></p><a href="{% url 'newteam' %}" class="btn btn-primary">Create team</a></p>
+        <p></p><a href="#" class="btn btn-primary">Create task</a></p>
+
+        <hr>
+
+        <h4>List of teams</h4>
+        {% for team in teams %}
+            <p><a href="{% url 'team_info' team.pk %}">{{ team.name }}</a>
+        {% endfor %}
+        {% endif %}
+
+        {% for team in teams %}
+        {% if user.profile in team.invited.all %}
+            <h4>List of teams</h4>
+            <p><a href="{% url 'team_info' team.pk %}">{{ team.name }}</a>
+                <a href="{% url 'team_info' team.pk %}" class="btn btn-primary">Approve membership</a></p>
+        {% endif %}
+        {% endfor %}
+
+
+        </div>

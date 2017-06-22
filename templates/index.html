@@ -1,0 +1,83 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PM - {% block meta_title %}{% endblock meta_title %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href={{ PORTAL_URL }}{% static "main.css" %}>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <h4 class="navbar-text"><a href="{% url "home" %}">PM Service</a></h4>
+            <ul class="nav navbar-nav">
+
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url "profile" %}">{{ user.username }}</a></li>
+                    <li><a href="{% url "users:auth_logout" %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url "users:auth_login" %}">Login</a></li>
+                    <li><a href="{% url "users:registration_register" %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% block content %}
+
+        {% if user.is_authenticated %}
+
+        <div>
+
+        {% if user.profile.role == 'PM' %}
+
+        <p></p><a href="{% url 'newteam' %}" class="btn btn-primary">Create team</a></p>
+        <p></p><a href="{% url 'newtask' %}" class="btn btn-primary">Create task</a></p>
+
+        <hr>
+
+        {% endif %}
+
+        <p>Role: {{ user.profile.role }}</p>
+        <p>Date joined: {{ user.date_joined }}</p>
+        <p>Teams :</p>
+
+        {% for team in teams %}
+        {% if user.profile == team.project_manager or user.profile in team.invited.all %}
+            <ul>
+                <li><a href="{% url 'team_info' team.pk %}">{{ team.name }}</a></li>
+                {% if user.profile in team.invited.all %}
+                    <a href="{% url 'team_info' team.pk %}" class="btn btn-primary">Approve membership</a></p>
+                {% endif %}
+            </ul>
+        {% endif %}
+        {% endfor %}
+
+        <p>Tasks :</p>
+
+        {% for task in tasks %}
+            {% if user.profile == task.project_manager or user.profile in task.assigned.all %}
+                <ul>
+                    <li><a href="{% url 'task_info' task.pk %}">{{ task.name }}</a></li>
+                    {% if user.profile == task.project_manager %}
+                        <a href="{% url 'assign' task.pk %}" class="btn btn-primary">Assign collaborator</a></p>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+        {% endblock content %}
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</body>
+</html>

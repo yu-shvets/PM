@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block meta_title %}Team info{% endblock meta_title %}
+
+
+{% block content %}
+
+    <p>{{ object.name }}</p>
+    <p>Project manager: {{ object.project_manager.user }}</p>
+    <p>Invited collaborators: <br>{% for invited in object.invited.all %}{{ invited.user }}<br>{% endfor %}</p>
+    <p>Approved collaborators: <br>{% for approved in object.approved.all %}{{ approved.user }}<br>{% endfor %}</p>
+
+    {% if user.profile in object.invited.all %}
+        <a href="{% url 'approve' object.id %}" class="btn btn-primary">Approve</a></p>
+    {% endif %}
+
+{% endblock content %}
